@@ -1,3 +1,4 @@
+import { notFoundError } from "@/errors";
 import { AuthenticatedRequest } from "@/middlewares";
 import hotelsService from "@/services/hotels-service";
 import { Response } from "express";
@@ -27,6 +28,8 @@ export async function getHotelsRoom(req: AuthenticatedRequest, res: Response){
 
         res.send(result)
     } catch(err){
+        if(err.name === 'NotFoundError') return res.status(httpStatus.NOT_FOUND).send(err.message)
+        if(err.name === 'PaymentRequired') return res.status(httpStatus.PAYMENT_REQUIRED).send(err.message)
         res.status(httpStatus.BAD_REQUEST).send(err.message)
     }
 }
